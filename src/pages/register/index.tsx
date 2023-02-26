@@ -7,12 +7,12 @@ import PasswordInput from "../../components/passwordInput"
 import logoImg from  '../../../public/images/logo.svg'
 import { Flex, Text, Center, Input, Button } from "@chakra-ui/react"
 
-export default function Login(){
+export default function Register(){
 
   return(
     <>
       <Head>
-        <title>BarberPRO - Faça login para acessar!</title>
+        <title>BarberPRO - Crie sua conta!</title>
       </Head>
       <Flex background="barber.900" height="100vh" alignItems="center" justifyContent="center" color={"white"}>
         
@@ -25,6 +25,15 @@ export default function Login(){
                 objectFit="fill" 
                 alt={"Logo Barber"} />
             </Center>
+
+            <Input
+                background={"barber.400"}
+                variant="filled"
+                size={"lg"}
+                placeholder={"Nome da barbearia"}
+                type="text"
+                mb={3}
+            />
 
             <Input
                 background={"barber.400"}
@@ -45,12 +54,12 @@ export default function Login(){
                 _hover={{bg: "#fcbb5a"}}
                 _active={{bg: "#ff9900"}}
             >
-                Acessar
+                Cadastrar
             </Button>
 
             <Center>
-                <Link href="/register">
-                    <Text color="white">Ainda não tem uma conta? <strong>Cadastre-se</strong></Text>
+                <Link href="/login">
+                    <Text color="white">Já possui uma conta? <strong>Faça login</strong></Text>
                 </Link>
             </Center>
         </Flex>
