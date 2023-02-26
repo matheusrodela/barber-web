@@ -6,7 +6,7 @@ import { extendTheme } from '@chakra-ui/react'
 const colors = {
   barber:{
     900: '#12131b',
-    400: '#1b1v29',
+    400: '#1b1c29',
     100: '#c6c6c6'
   },
 
