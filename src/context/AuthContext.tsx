@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useState } from "react"
-import { destroyCookie } from 'nookies'
+import { destroyCookie,setCookie } from 'nookies'
 import Router from 'next/router'
 
 import { api } from "../services/apiClient";
@@ -60,7 +60,25 @@ export function AuthProvider({ children }: AuthProviderProps){
                 password,
             })
 
-            console.log(response.data);
+            const { id, name, token, subscriptions, endereco } = response.data;
+
+            setCookie(undefined, '@barber.token', token, {
+                maxAge: 60 * 60 * 24 * 30, //expirar em 1 mes
+                path: '/'
+            })
+
+            setUser({
+                id,
+                name,
+                email,
+                endereco,
+                subscriptions
+            })
+
+            api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+            Router.push('/dashboard');
+
         }catch(err){
             console.log("ERRO AO ENTRAR", err)
         }
