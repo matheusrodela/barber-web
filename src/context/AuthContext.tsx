@@ -1,4 +1,6 @@
 import { createContext, ReactNode, useState } from "react"
+import { destroyCookie } from 'nookies'
+import Router from 'next/router'
 
 //informações do contexto
 interface AuthContextData{
@@ -34,11 +36,22 @@ interface SignInProps{
 
 export const AuthContext = createContext({} as AuthContextData)
 
+
+export function signOut(){
+    console.log("ERRO NO LOGOUT")
+    try{
+        destroyCookie(null, '@barber.token', { path: '/'})
+        Router.push('/login');
+    }catch(err){
+        console.log("Erro ao sair")
+    }
+}
+
 export function AuthProvider({ children }: AuthProviderProps){
     const [user, setUser] = useState<UserProps>()
-    const isAuthenticated = !!user;
+    const isAuthenticated = !!user; // !! converte o resultado para booleano. Se tem info = true e se vazio = false
 
-    async function signIn({ email, password }){
+    async function signIn({ email, password }: SignInProps){
         console.log({
             email,
             password
