@@ -2,6 +2,8 @@ import { createContext, ReactNode, useState } from "react"
 import { destroyCookie } from 'nookies'
 import Router from 'next/router'
 
+import { api } from "../services/apiClient";
+
 //informações do contexto
 interface AuthContextData{
     user: UserProps;
@@ -52,10 +54,16 @@ export function AuthProvider({ children }: AuthProviderProps){
     const isAuthenticated = !!user; // !! converte o resultado para booleano. Se tem info = true e se vazio = false
 
     async function signIn({ email, password }: SignInProps){
-        console.log({
-            email,
-            password
-        })
+        try{
+            const response = await api.post("/session",{
+                email,
+                password,
+            })
+
+            console.log(response.data);
+        }catch(err){
+            console.log("ERRO AO ENTRAR", err)
+        }
     }
 
 
