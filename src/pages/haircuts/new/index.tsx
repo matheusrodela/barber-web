@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Head from "next/head";
 import { Sidebar } from "@/components/sidebar"; 
 
@@ -12,6 +13,7 @@ import {
 
 import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
+import Router from "next/router";
 
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
@@ -25,6 +27,30 @@ interface NewHaircutProps{
 export default function NewHaircut({subscription, count}: NewHaircutProps){
 
     const [isMobile] = useMediaQuery("(max-width: 500px)");
+
+    const [name, setName] = useState('')
+    const [price, setPrice] = useState('')
+
+    async function handleRegister() {
+        if(name === '' || price === ''){
+            return;
+        }
+
+        try{
+
+            const apiClient = setupAPIClient();
+            await apiClient.post('/haircut', {
+                name: name,
+                price: Number(price)
+            })
+
+            Router.push("/haircuts")
+
+        }catch(err){
+            console.log(err);
+            alert("Erro ao cadastrar")
+        }
+    }
 
     return (
         <>
@@ -88,6 +114,8 @@ export default function NewHaircut({subscription, count}: NewHaircutProps){
                             borderColor={"gray.600"}
                             bg={"barber.900"}
                             mb="3"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
 
                         <Input
@@ -98,9 +126,12 @@ export default function NewHaircut({subscription, count}: NewHaircutProps){
                             borderColor={"gray.600"}
                             bg={"barber.900"}
                             mb={6}
+                            value={price}
+                            onChange={(e) => setPrice(e.target.value)}
                         />
 
                         <Button
+                            onClick={handleRegister}
                             w="85%"
                             size={"lg"}
                             color="gray.900"
@@ -118,8 +149,9 @@ export default function NewHaircut({subscription, count}: NewHaircutProps){
                                     Você atingiu seu limite de cadastros.
                                 </Text>
                                 <Link href={"/planos"}>
-                                    <Text fontWeight={"bold"} color="#31fb6a" cursor="pointer" ml={2}>Seja Premium.</Text>
+                                    <Text fontWeight={"bold"} color="#0eec4d" cursor="pointer" ml={2}>Seja Premium</Text>
                                 </Link>
+                                <Text ml={1}>e tenha acesso ilimitado.</Text>
                             </Flex>
                         )}
 
