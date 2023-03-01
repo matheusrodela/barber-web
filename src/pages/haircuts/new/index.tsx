@@ -13,7 +13,16 @@ import {
 import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
 
-export default function NewHaircut(){
+import { canSSRAuth } from "@/utils/canSSRAuth";
+import { setupAPIClient } from "@/services/api";
+
+
+interface NewHaircutProps{
+    subscription: boolean;
+    count: number;
+}
+
+export default function NewHaircut({subscription, count}: NewHaircutProps){
 
     const [isMobile] = useMediaQuery("(max-width: 500px)");
 
@@ -77,7 +86,7 @@ export default function NewHaircut(){
                             type="text"
                             w="85%"
                             borderColor={"gray.600"}
-                            bg={"gray.900"}
+                            bg={"barber.900"}
                             mb="3"
                         />
 
@@ -87,8 +96,8 @@ export default function NewHaircut(){
                             type="text"
                             w="85%"
                             borderColor={"gray.600"}
-                            bg={"gray.900"}
-                            mb={4}
+                            bg={"barber.900"}
+                            mb={6}
                         />
 
                         <Button
@@ -98,9 +107,22 @@ export default function NewHaircut(){
                             mb="6"
                             bg={"button.cta"}
                             _hover={{ bg: "#ff9900" }}
+                            isDisabled={!subscription && count >= 3? true : false}
                         >
                             Cadastrar
                         </Button>
+
+                        {!subscription && count >= 3 && (
+                            <Flex direction={"row"} align="center" justify="center">
+                                <Text>
+                                    Você atingiu seu limite de cadastros.
+                                </Text>
+                                <Link href={"/planos"}>
+                                    <Text fontWeight={"bold"} color="#31fb6a" cursor="pointer" ml={2}>Seja Premium.</Text>
+                                </Link>
+                            </Flex>
+                        )}
+
                     </Flex>
 
                 </Flex>
@@ -108,3 +130,32 @@ export default function NewHaircut(){
         </>
     )
 }
+
+export const getServerSideProps = canSSRAuth(async (ctx) => {
+
+    try{
+
+        const apiClient = setupAPIClient(ctx);
+
+        const response = await apiClient.get("/haircut/check")
+        const count = await apiClient.get("/haircut/count")
+
+        return{
+            props:{
+                subscription: response.data?.subscriptions?.status === 'active' ? true : false,
+                count: count.data
+            }
+        }
+
+    }catch(err){
+        console.log(err);
+
+        return{
+            redirect:{
+                destination: '/dashboard',
+                permanent: false
+            }
+        }
+    }
+
+})
