@@ -77,7 +77,7 @@ const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
                 <Link href={"/dashboard"}>
                     <Flex cursor={"pointer"} userSelect="none" flexDirection={"row"}>
                         <Text fontSize="2xl" fontFamily="monospace" fontWeight={"bold"}>Barber</Text>
-                        <Text fontSize="2xl" fontFamily="monospace" fontWeight={"bold"}>PRO</Text>
+                        <Text fontSize="2xl" fontFamily="monospace" fontWeight={"bold"} color="button.cta">PRO</Text>
                     </Flex>
                 </Link>
                 <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose}/>
