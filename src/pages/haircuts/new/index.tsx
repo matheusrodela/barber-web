@@ -6,7 +6,8 @@ import {
     Text, 
     Heading,
     Button,
-    useMediaQuery
+    useMediaQuery,
+    Input
 } from "@chakra-ui/react";
 
 import Link from "next/link";
@@ -65,8 +66,41 @@ export default function NewHaircut(){
                         justify="center"
                         pt={8}
                         pb={8}
+                        rounded={4}
+                        direction="column"
                     >
-                        <Heading>Cadastrar modelo</Heading>
+                        <Heading mb={4} fontSize={ isMobile ? "22px" : "3xl" } color="white" >Cadastrar modelo</Heading>
+
+                        <Input
+                            placeholder="Nome do corte"
+                            size={"lg"}
+                            type="text"
+                            w="85%"
+                            borderColor={"gray.600"}
+                            bg={"gray.900"}
+                            mb="3"
+                        />
+
+                        <Input
+                            placeholder="Valor do corte - Exemplo: 59.90"
+                            size={"lg"}
+                            type="text"
+                            w="85%"
+                            borderColor={"gray.600"}
+                            bg={"gray.900"}
+                            mb={4}
+                        />
+
+                        <Button
+                            w="85%"
+                            size={"lg"}
+                            color="gray.900"
+                            mb="6"
+                            bg={"button.cta"}
+                            _hover={{ bg: "#ff9900" }}
+                        >
+                            Cadastrar
+                        </Button>
                     </Flex>
 
                 </Flex>
