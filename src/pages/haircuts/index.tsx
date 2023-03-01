@@ -32,7 +32,7 @@ export default function Haircuts(){
                         w="100%"
                         alignItems={isMobile ? 'center' : 'center'}
                         justifyContent={"center"}
-                        mb="0"
+                        mb={isMobile ? '45px' : '55px'}
                     >
                         <Heading
                             fontSize={isMobile ? "28px" : "3xl"}
@@ -45,8 +45,13 @@ export default function Haircuts(){
                         </Heading>
 
                         <Link href={"/haircuts/new"}>
-                            <Button bg="gray.700" size={"md"} mt={isMobile ? '3' : '0'}>
-                                Cadastrar novo
+                            <Button 
+                                bg="gray.700" 
+                                size={"md"} 
+                                mt={isMobile ? '3' : '0'} 
+                                _hover={{ bg: "gray.800" }}
+                                >
+                                    Cadastrar novo
                             </Button>
                         </Link>
 
@@ -77,12 +82,13 @@ export default function Haircuts(){
                             justifyContent="space-between"
                             _hover={{ border:"1px", borderColor: "gray.400", bg: "gray.800" }}
                         >
+
                             <Flex direction={"row"} alignItems="center" justifyContent={"center"}>
                                 <IoMdPricetag size={28} color="#fba931"/>
-                                <Text fontWeight={"bold"} ml="4" noOfLines={2} color="white">Nome do corte</Text>
+                                <Text fontWeight={isMobile ? 'inherit' : 'bold'} ml="4" noOfLines={2} color="white">Nome do corte</Text>
                             </Flex>
 
-                            <Text fontWeight={"bold"} color="white">Preço: R$ 59.90</Text>
+                            <Text fontWeight={isMobile ? 'inherit' : 'bold'} color="white">Preço: R$ 59.90</Text>
 
                         </Flex>
                     </Link>
