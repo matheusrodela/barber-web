@@ -33,7 +33,7 @@ export default function Login(){
       <Head>
         <title>BarberPRO - Faça login para acessar!</title>
       </Head>
-      <Flex background="barber.900" height="100vh" alignItems="center" justifyContent="center" color={"white"}>
+      <Flex background="barber.900" height="100vh" alignItems="center" justifyContent="center" color={"white"} overflow="hidden">
         
         <Flex width={640} direction="column" p={14} rounded={8}>
             <Center p={4} >
@@ -41,7 +41,6 @@ export default function Login(){
                 src={logoImg} 
                 quality={100}
                 width={"240"} 
-                objectFit="fill" 
                 alt={"Logo Barber"} />
             </Center>
 
