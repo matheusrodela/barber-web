@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, ChangeEvent } from 'react'
+
 import Head from "next/head"
 import { Sidebar } from "@/components/sidebar"
 import {
@@ -35,6 +36,36 @@ export default function Haircuts({ haircuts }: HaircutsProps){
     const [isMobile] = useMediaQuery("(max-width: 500px)")
 
     const [haircutList, setHaircutList] = useState<HaircutsItem[]>(haircuts || [])
+
+    const [disableHaircut, setDisableHaircut] = useState("enabled")
+
+    async function handleDisabled(e: ChangeEvent<HTMLInputElement>){
+        const apiClient = setupAPIClient();
+
+        if(e.target.value === 'disabled'){
+            setDisableHaircut("enabled")
+            
+            const response = await apiClient.get("/haircuts", {
+                params:{
+                    status: true
+                }
+            })
+
+            setHaircutList(response.data);
+
+        }else{
+            setDisableHaircut("disabled")
+            
+            const response = await apiClient.get("/haircuts", {
+                params:{
+                    status: false
+                }
+            })
+
+            setHaircutList(response.data);
+
+        }
+    }
 
     return(
         <>
@@ -83,6 +114,9 @@ export default function Haircuts({ haircuts }: HaircutsProps){
                                 <Switch
                                     colorScheme={"green"}
                                     size="lg"
+                                    value={disableHaircut}
+                                    onChange={ (e: ChangeEvent<HTMLInputElement>) => handleDisabled(e)}
+                                    isChecked={disableHaircut === 'disabled' ? false : true}
                                 />
                         </Stack>
 
