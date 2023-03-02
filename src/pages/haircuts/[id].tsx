@@ -9,12 +9,34 @@ import {
     Stack,
     Switch
  } from "@chakra-ui/react";
+
 import { Sidebar } from "@/components/sidebar"
 import { FiChevronLeft } from "react-icons/fi"
-import Lin from "next/link"
 import Link from "next/link";
 
- export default function EditHaircut(){
+import { canSSRAuth } from "@/utils/canSSRAuth";
+import { setupAPIClient } from "@/services/api";
+
+interface HaircutProps{
+    id: string;
+    name: string;
+    price: string | number;
+    status: boolean;
+    user_id: string;
+
+}
+
+interface SubscriptionProps{
+    id: string;
+    status: string;
+}
+
+interface EditHaircutProps{
+    haircut: HaircutProps;
+    subscriptions: SubscriptionProps | null;
+}
+
+ export default function EditHaircut({ subscriptions, haircut }: EditHaircutProps){
     const [isMobile] = useMediaQuery("(max-width: 500px)")
 
     return(
@@ -85,6 +107,7 @@ import Link from "next/link";
                                 bg={"button.cta"}
                                 color="gray.900"
                                 _hover={{ bg: "#ff9900" }}
+                                disabled={subscriptions?.status !== 'active'}
                             >
                                 Salvar
                             </Button>
@@ -99,3 +122,38 @@ import Link from "next/link";
     )
 
  }
+
+
+ export const getServerSideProps = canSSRAuth(async (ctx) => {
+    const { id } = ctx.params;
+
+        try{
+            const apiCLient = setupAPIClient(ctx);
+
+            const check = await apiCLient.get('/haircut/check')
+
+            const response = await apiCLient.get('/haircut/detail', {
+                params:{
+                    haircut_id: id
+                }
+            })
+
+            return {
+                props:{
+                    haircut: response.data,
+                    subscription: check.data?.subscriptions
+                }
+            }
+
+        }catch(err){
+            console.log(err);
+
+            return{
+                redirect:{
+                    destination: '/haircuts',
+                    permanent: false,
+                }
+            }
+        }
+
+ })
