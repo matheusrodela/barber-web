@@ -33,10 +33,10 @@ interface SubscriptionProps{
 
 interface EditHaircutProps{
     haircut: HaircutProps;
-    subscriptions: SubscriptionProps | null;
+    subscription: SubscriptionProps | null;
 }
 
- export default function EditHaircut({ subscriptions, haircut }: EditHaircutProps){
+ export default function EditHaircut({ subscription, haircut }: EditHaircutProps){
     const [isMobile] = useMediaQuery("(max-width: 500px)")
 
     return(
@@ -107,10 +107,19 @@ interface EditHaircutProps{
                                 bg={"button.cta"}
                                 color="gray.900"
                                 _hover={{ bg: "#ff9900" }}
-                                disabled={subscriptions?.status !== 'active'}
+                                isDisabled={subscription?.status !== 'active'}
                             >
                                 Salvar
                             </Button>
+
+                            {subscription?.status !== 'active' && (
+                                <Flex w={"100%"} justify="center" align={"center"}>
+                                    <Link href={"/planos"}>
+                                        <Text color={"#0eec4d"} mr="1">Seja premium</Text>
+                                    </Link>
+                                    <Text>e tenha todos os acessos liberados.</Text>
+                                </Flex>
+                            )}
 
                         </Flex>
 
