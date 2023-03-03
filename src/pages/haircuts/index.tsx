@@ -141,7 +141,7 @@ export default function Haircuts({ haircuts }: HaircutsProps){
                                     <Text fontWeight={isMobile ? 'inherit' : 'bold'} ml="4" noOfLines={2} color="white">{haircut.name}</Text>
                                 </Flex>
     
-                                <Text fontWeight={isMobile ? 'inherit' : 'bold'} color="white">Preço: R$ {haircut.price}</Text>
+                                <Text fontWeight={isMobile ? 'inherit' : 'bold'} color="white">Preço: R$ {Number(haircut.price).toFixed(2)}</Text>
     
                             </Flex>
                         </Link>

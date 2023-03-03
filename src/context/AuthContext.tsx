@@ -110,6 +110,7 @@ export function AuthProvider({ children }: AuthProviderProps){
             Router.push('/dashboard');
 
         }catch(err){
+            alert("Email ou senha incorretos")
             console.log("ERRO AO ENTRAR", err)
         }
     }

@@ -1,3 +1,4 @@
+import { useState, ChangeEvent } from "react";
 import Head from "next/head"
 import { 
     Flex,
@@ -13,6 +14,7 @@ import {
 import { Sidebar } from "@/components/sidebar"
 import { FiChevronLeft } from "react-icons/fi"
 import Link from "next/link";
+import Router from "next/router";
 
 import { canSSRAuth } from "@/utils/canSSRAuth";
 import { setupAPIClient } from "@/services/api";
@@ -39,6 +41,45 @@ interface EditHaircutProps{
  export default function EditHaircut({ subscription, haircut }: EditHaircutProps){
     const [isMobile] = useMediaQuery("(max-width: 500px)")
 
+    const [name, setName] = useState(haircut?.name)
+    const [price, setPrice] = useState(haircut?.price)
+    const [status, setStatus] = useState(haircut?.status)
+
+    const [disableHaircut, setDisableHaircut] = useState(haircut?.status ? "disabled" : "enabled")
+
+    function handleChangeStatus(e: ChangeEvent<HTMLInputElement>){
+        if(e.target.value === 'disabled'){
+            setDisableHaircut("enabled")
+            setStatus(false)
+        }  else{
+            setDisableHaircut("disabled")
+            setStatus(true)
+        }
+    }
+
+    async function handleUpdate(){
+        if(name === '' ||  price === ''){
+            return;
+        }
+
+        try{
+            const apiClient = setupAPIClient();
+            await apiClient.put('/haircut', {
+                name: name,
+                price: Number(price),
+                status: status,
+                haircut_id: haircut?.id
+            })
+
+            alert("Corte atualizado com sucesso!")
+
+            Router.push("/haircuts")
+
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     return(
         <>
             <Head>
@@ -46,7 +87,7 @@ interface EditHaircutProps{
             </Head>
             <Sidebar>
 
-                <Flex direction={"column"} alignItems={"flex-start"} justifyContent={"flex-start"}>
+                <Flex direction={"column"} alignItems={"center"} justifyContent={"center"}>
 
                     <Flex
                         direction={isMobile ? "column" : "row"}
@@ -63,7 +104,7 @@ interface EditHaircutProps{
                             </Button>
                         </Link>
 
-                        <Heading fontSize={isMobile ? "22px" : "3xl"} color={"white"}>
+                        <Heading fontSize={isMobile ? "22px" : "3xl"} color={"white"} pt={isMobile ? "3" : "0"}>
                             Editar corte
                         </Heading>
                     </Flex>
@@ -81,6 +122,8 @@ interface EditHaircutProps{
                                 size={"lg"}
                                 type="text"
                                 w="100%"
+                                value={name}
+                                onChange={ (e) => setName(e.target.value) }
                             />
 
                             <Input 
@@ -91,6 +134,8 @@ interface EditHaircutProps{
                                 size={"lg"}
                                 type="number"
                                 w="100%"
+                                value={Number(price).toFixed(2)}
+                                onChange={ (e) => setPrice(e.target.value) }
                             />
 
                             <Stack direction={"row"} mb="6" mt={2} align={"center"} justify="flex-end">
@@ -98,6 +143,9 @@ interface EditHaircutProps{
                                 <Switch
                                     size={"lg"}
                                     colorScheme="red"
+                                    value={disableHaircut}
+                                    isChecked={disableHaircut === "disabled" ? false : true}
+                                    onChange={ (e: ChangeEvent<HTMLInputElement>) => handleChangeStatus(e) }
                                 />
                             </Stack>
 
@@ -108,12 +156,13 @@ interface EditHaircutProps{
                                 color="gray.900"
                                 _hover={{ bg: "#ff9900" }}
                                 isDisabled={subscription?.status !== 'active'}
+                                onClick={handleUpdate}
                             >
                                 Salvar
                             </Button>
 
                             {subscription?.status !== 'active' && (
-                                <Flex w={"100%"} justify="center" align={"center"}>
+                                <Flex w={"100%"} justify="center" align={"center"} cursor="pointer">
                                     <Link href={"/planos"}>
                                         <Text color={"#0eec4d"} mr="1">Seja premium</Text>
                                     </Link>
@@ -151,9 +200,10 @@ interface EditHaircutProps{
                 props:{
                     haircut: response.data,
                     subscription: check.data?.subscriptions
-                }
+                },
             }
 
+            
         }catch(err){
             console.log(err);
 
